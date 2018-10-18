@@ -18,6 +18,16 @@ class Login extends React.Component {
             <div>
                 <Logo></Logo>
                 <WingBlank>
+                    <List>
+                        <InputItem>
+                            用户名
+                        </InputItem>
+                        <InputItem>
+                            密码
+                        </InputItem>
+                    </List>
+                    <WhiteSpace/>
+                    <WhiteSpace/>
                     <Button type="primary">登录</Button>
                     <WhiteSpace></WhiteSpace>
                     <Button onClick={this.register} type="primary">注册</Button>
