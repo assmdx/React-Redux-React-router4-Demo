@@ -121,10 +121,16 @@
           "legacy": true
         }
       ],
-      ["import", { "libraryName": "antd-mobile", "style": "css" }]
+      [
+        "import",
+        {
+          "libraryName": "antd-mobile",
+          "style": "css"
+        }
+      ]
     ]
   },
-  "proxy":"http://localhost:9003",
+  "proxy": "http://localhost:9093/",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.1.2"
   }
