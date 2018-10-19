@@ -6,11 +6,20 @@ class Register extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            type:'boss'
+            user:'',
+            pwd:"",
+            repeatpwd:"",
+            type:'genius'
         }
+        this.handleRegister = this.handleRegister.bind(this)
     }
-    onhandleChange(type){
-
+    onhandleChange(key,value){
+        this.setState({
+            [key]:value
+        })
+    }
+    handleRegister(){
+        console.log(this.state)
     }
     render(){
         const RadioItem = Radio.RadioItem
@@ -19,22 +28,22 @@ class Register extends React.Component {
                 <Logo></Logo>
                 <WingBlank>
                     <List>
-                        <InputItem>
+                        <InputItem onChange={v=>this.onhandleChange('user',v)}>
                             用户名
                         </InputItem>
-                        <InputItem>
+                        <InputItem type="password" onChange={v=>this.onhandleChange('pwd',v)}>
                             密码
                         </InputItem>
-                        <InputItem>
+                        <InputItem type="password" onChange={v=>this.onhandleChange('repeatpwd',v)}>
                             确认密码
                         </InputItem>
-                        <RadioItem checked={this.state.type==='genius'}>
+                        <RadioItem checked={this.state.type==='genius'} onChange={()=>this.onhandleChange('type','genius')}>
                             牛人
                         </RadioItem>
-                        <RadioItem checked={this.state.type==='boss'}>
-                            BOSS
+                        <RadioItem checked={this.state.type==='boss'} onChange={()=>this.onhandleChange('type','boss')}>
+                                boss
                         </RadioItem>
-                        <Button type="primary" onClick={this.register} type="primary">注册</Button>
+                        <Button type="primary" onClick={this.register} type="primary" onClick={this.handleRegister}>注册</Button>
                     </List>
                 </WingBlank>
             </div>
