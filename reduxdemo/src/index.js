@@ -18,7 +18,7 @@ const store = createStore(reducers,compose(
 const Boss = ()=><h1>Boss</h1>
 ReactDom.render(
     (
-        <Provider>
+        <Provider store={store}>
             <BrowserRouter>
                 <div>
                     <AuthRoute></AuthRoute>
@@ -29,4 +29,5 @@ ReactDom.render(
             </BrowserRouter>
         </Provider>
     ),
-    document.getElementById('root'))
+    document.getElementById('root')
+)
