@@ -33,6 +33,19 @@ function md5pwd(pwd){
     const halt = 'sajgdjasgdasasA123sa78';
     return utility.md5(utility.md5(pwd+halt))
 }
+Router.post('/login',(req,res)=>{
+    const {user,pwd} = req.body
+    User.findOne({user:user,pwd:md5pwd(pwd)},{pwd:0,'_id':0,'__v':0},(err,doc)=>{
+        //返回结果中不返回pwd __v _id
+        console.log(doc)
+        if(doc){
+            return res.json({code:0,data:doc})
+        }
+        else{
+            return res.json({code:1,msg:'用户名或密码错误'})
+        }
+    })
+})
 Router.get('/info',(req,res)=>{
     //用户有没有cookie
     return res.json({code:1})
