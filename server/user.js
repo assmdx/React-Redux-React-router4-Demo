@@ -1,4 +1,5 @@
 const express = require('express')
+const utility = require('utility')
 const Router = express.Router()
 const model = require('./model')
 const User  = model.getModel('user')
@@ -17,7 +18,7 @@ Router.post('/register',function(req,res){
             return res.json({code:1,msg:'用户名重复'})
         }
         else{
-            User.create({user,pwd,type},(e,d)=>{
+            User.create({user,pwd:md5pwd(pwd),type},(e,d)=>{
                 if(e){
                     return res.json({code:1,msg:'后端出错了'})
                 }
@@ -28,6 +29,10 @@ Router.post('/register',function(req,res){
         }
     })
 })
+function md5pwd(pwd){
+    const halt = 'sajgdjasgdasasA123sa78';
+    return utility.md5(utility.md5(pwd+halt))
+}
 Router.get('/info',(req,res)=>{
     //用户有没有cookie
     return res.json({code:1})
