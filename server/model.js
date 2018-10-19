@@ -25,7 +25,7 @@ for(let m in models){
     mongoose.model(m,new mongoose.Schema(models[m]))
 }
 
-modules.export = {
+module.exports = {
     getModel:function(name){
         return mongoose.model(name)
     }

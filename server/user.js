@@ -8,11 +8,12 @@ Router.get('/list',(req,res)=>{
         return res.json(doc)
     })
 })
-Router.post('/register',(req,res)=>{
-    console.log(req.body.data)
-    const {user,pwd,type} = req.body.data
+Router.post('/register',function(req,res){
+    console.log(req.body)
+    const {user,pwd,type} = req.body
     User.find({user:user},(err,doc)=>{
-        if(doc){
+        console.log('doc',doc)
+        if(doc.length >0){
             return res.json({code:1,msg:'用户名重复'})
         }
         else{
