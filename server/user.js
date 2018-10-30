@@ -10,23 +10,20 @@ Router.get('/list',(req,res)=>{
     })
 })
 Router.post('/register',function(req,res){
-    console.log(req.body)
     const {user,pwd,type} = req.body
-    User.find({user:user},(err,doc)=>{
-        console.log('doc',doc)
-        if(doc.length >0){
+    User.findOne({user:user},(err,doc)=>{
+        if(doc){
             return res.json({code:1,msg:'用户名重复'})
         }
-        else{
-            User.create({user,pwd:md5pwd(pwd),type},(e,d)=>{
-                if(e){
-                    return res.json({code:1,msg:'后端出错了'})
-                }
-                else{
-                    return res.json({code:0})
-                }
-            })
-        }
+        const userModel = new User({user,type,pwd:md5pwd(pwd)})
+        userModel.save((e,d)=>{
+            if(e){
+                return res.json({code:1,msg:'后端出错了'})
+            }
+            const {user,ytpe,_id} = d
+            res.cookie('userid',_id)
+            return res.json({code:0,data:{user,type,_id}})
+        })
     })
 })
 function md5pwd(pwd){
@@ -35,10 +32,11 @@ function md5pwd(pwd){
 }
 Router.post('/login',(req,res)=>{
     const {user,pwd} = req.body
-    User.findOne({user:user,pwd:md5pwd(pwd)},{pwd:0,'_id':0,'__v':0},(err,doc)=>{
+    User.findOne({user:user,pwd:md5pwd(pwd)},{pwd:0,'__v':0},(err,doc)=>{
         //返回结果中不返回pwd __v _id
         console.log(doc)
         if(doc){
+            res.cookie('userid',doc._id)
             return res.json({code:0,data:doc})
         }
         else{
@@ -46,9 +44,22 @@ Router.post('/login',(req,res)=>{
         }
     })
 })
+const _filter = {'pwd':0,'__v':0}
 Router.get('/info',(req,res)=>{
     //用户有没有cookie
-    return res.json({code:1})
+    console.log(req.cookies)
+    const {userid} = req.cookies
+    if(!userid){
+        return res.json({code:1})
+    }
+    User.findOne({_id:userid},_filter,(err,doc)=>{
+        if(err){
+            return res.json('后端出错了')
+        }
+        else{
+            return res.json({code:0,msg:doc})
+        }
+    })
 })
 
 

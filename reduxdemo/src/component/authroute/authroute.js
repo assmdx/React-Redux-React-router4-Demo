@@ -1,8 +1,10 @@
 import React from 'react'
 import axios from 'axios'
 import {withRouter} from 'react-router-dom'
-
+import {loadData} from '../../redux/user.redux.js'
+import {connect} from 'react-redux'
 @withRouter
+@connect(null,{loadData})
 class AuthRoute extends React.Component{
     componentDidMount(){
         //获取用户信息
@@ -15,17 +17,17 @@ class AuthRoute extends React.Component{
         if(publicList.indexOf(pathname) > -1){
             return null
         }
-        axios.get('user/info')
+        axios.get('user/info', {withCredentials: true,headers:{"Cookie":document.cookie}})
             .then(res=>{
                 if(res.status === 200){
                     if(res.data.code === 0){
-                        //有登陆信息
+                        //有登录信息
+                        console.log(res.data.msg)
+                        this.props.loadData(res.data.msg)
                     }
                     else{
-                        console.log(this.props.history)
                         this.props.history.push('/login')
                     }
-                    console.log(res.data)
                 }
             })
             .catch(err=>{
