@@ -30,6 +30,20 @@ function md5pwd(pwd){
     const halt = 'sajgdjasgdasasA123sa78';
     return utility.md5(utility.md5(pwd+halt))
 }
+Router.post('/update',(req,res)=>{
+    const {userid} = req.cookies
+    if(!userid){
+        return res.json.dumps({code:1})
+    }
+    const body = req.body
+    User.findOneAndUpdate(userid,body,(err,doc)=>{
+        const data = Object.assign({},{
+            user:doc.user,
+            type:doc.type
+        },body)
+        return res.json({code:0,data})
+    })
+})
 Router.post('/login',(req,res)=>{
     const {user,pwd} = req.body
     User.findOne({user:user,pwd:md5pwd(pwd)},{pwd:0,'__v':0},(err,doc)=>{
