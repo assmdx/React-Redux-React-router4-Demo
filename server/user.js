@@ -20,7 +20,8 @@ Router.post('/register',function(req,res){
             if(e){
                 return res.json({code:1,msg:'后端出错了'})
             }
-            const {user,ytpe,_id} = d
+            const {user,type,_id} = d
+            console.log('register result is ',d)
             res.cookie('userid',_id)
             return res.json({code:0,data:{user,type,_id}})
         })
@@ -32,15 +33,17 @@ function md5pwd(pwd){
 }
 Router.post('/update',(req,res)=>{
     const {userid} = req.cookies
+    console.log("userid is ",userid)
     if(!userid){
         return res.json.dumps({code:1})
     }
     const body = req.body
-    User.findOneAndUpdate(userid,body,(err,doc)=>{
+    User.findOneAndUpdate({'_id':userid},body,(err,doc)=>{
         const data = Object.assign({},{
             user:doc.user,
             type:doc.type
         },body)
+        console.log(doc)
         return res.json({code:0,data})
     })
 })
