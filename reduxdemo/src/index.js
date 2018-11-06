@@ -6,6 +6,7 @@ import {Provider} from 'react-redux'
 import {BrowserRouter,Route,Redirect,Switch} from 'react-router-dom'
 
 import reducers from './reducer'
+import './index.css'
 import './config'
 import Login from "./container/login/login";
 import Register from "./container/register/register";
