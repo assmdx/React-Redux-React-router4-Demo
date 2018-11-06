@@ -64,7 +64,6 @@ export function register({user,pwd,repeatpwd,type}){
     }
 }
 export function loadData(userinfo){
-    console.log(userinfo)
     return {type:LOAD_DATA,payload:userinfo}
 }
 export function update(data) {
