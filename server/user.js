@@ -5,8 +5,9 @@ const model = require('./model')
 const User  = model.getModel('user')
 
 Router.get('/list',(req,res)=>{
-    User.find({},(err,doc)=>{
-        return res.json(doc)
+    const {type} = req.query
+    User.find({type},(err,doc)=>{
+        return res.json({code:0,data:doc})
     })
 })
 Router.post('/register',function(req,res){
