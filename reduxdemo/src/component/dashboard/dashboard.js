@@ -5,13 +5,11 @@ import {NavBar} from 'antd-mobile'
 import {Switch,Route} from 'react-router-dom'
 import Boss from '../boss/boss'
 import Genius from '../genius/genius'
-
+import User from '../user/user'
 function Msg(){
     return <h2>消息首页</h2>
 }
-function User(){
-    return <h2>个人中心</h2>
-}
+
 @connect(
     state=>state
 )
