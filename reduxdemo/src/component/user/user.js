@@ -2,8 +2,11 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Result,List,WhiteSpace,Modal} from 'antd-mobile'
 import browserCookie from 'browser-cookies'
+import {logoutSubmit} from '../../redux/user.redux'
+import {Redirect} from 'react-router-dom'
 @connect(
-    state=>state.user
+    state=>state.user,
+    {logoutSubmit}
 )
 class User extends  React.Component{
     constructor(props){
@@ -16,7 +19,7 @@ class User extends  React.Component{
             {text:'取消',onPress:()=>console.log('cancel')},
             {text:'确定',onPress:()=>{
                     browserCookie.erase('userid')
-                    window.location.href = window.location.href
+                    this.props.logoutSubmit()
                 }
             },
         ])
@@ -24,13 +27,10 @@ class User extends  React.Component{
     render(){
         console.log(this.props)
         const props = this.props
-        if(!props.user){
-            return null
-        }
-
         const Item = List.Item
         const Brief = Item.Brief
-        return (
+
+        return props.user ?(
             <div>
                 <Result
                     img={<img style={{width:50}} src={require(`../img/${props.avatar}.png`)}/>}
@@ -52,7 +52,7 @@ class User extends  React.Component{
                     </List.Item>
                 </List>
             </div>
-        )
+        ) :<Redirect to={props.redirectTo}/>
     }
 }
 export default User
