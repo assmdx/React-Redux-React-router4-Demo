@@ -6,6 +6,7 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
     "mongoose": "^5.3.4",
+    "socket.io": "^2.1.1",
     "utility": "^1.15.0"
   }
 }
