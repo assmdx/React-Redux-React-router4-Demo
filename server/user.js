@@ -88,5 +88,4 @@ Router.get('/getmsglist',(req,res)=>{
         }
     })
 })
-
 module.exports = Router
