@@ -3,7 +3,7 @@ const utility = require('utility')
 const Router = express.Router()
 const model = require('./model')
 const User  = model.getModel('user')
-
+const Chat  = model.getModel('chat')
 Router.get('/list',(req,res)=>{
     const {type} = req.query
     User.find({type},(err,doc)=>{
@@ -76,6 +76,17 @@ Router.get('/info',(req,res)=>{
         }
     })
 })
-
+Router.get('/getmsglist',(req,res)=>{
+    const user = req.cookies.userid
+    //Chat.find({'$or':[{from:user,to:user}]})//查询多个条件
+    Chat.find({},(err,doc)=>{
+        if(!err){
+            return res.json({code:0,msgs:doc})
+        }
+        else{
+            return res.json({code:1,msgs:''})
+        }
+    })
+})
 
 module.exports = Router
