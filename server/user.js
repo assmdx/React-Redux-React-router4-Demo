@@ -22,7 +22,6 @@ Router.post('/register',function(req,res){
                 return res.json({code:1,msg:'后端出错了'})
             }
             const {user,type,_id} = d
-            console.log('register result is ',d)
             res.cookie('userid',_id)
             return res.json({code:0,data:{user,type,_id}})
         })
@@ -52,7 +51,6 @@ Router.post('/login',(req,res)=>{
     const {user,pwd} = req.body
     User.findOne({user:user,pwd:md5pwd(pwd)},{pwd:0,'__v':0},(err,doc)=>{
         //返回结果中不返回pwd __v _id
-        console.log(doc)
         if(doc){
             res.cookie('userid',doc._id)
             return res.json({code:0,data:doc})
@@ -65,7 +63,6 @@ Router.post('/login',(req,res)=>{
 const _filter = {'pwd':0,'__v':0}
 Router.get('/info',(req,res)=>{
     //用户有没有cookie
-    console.log(req.cookies)
     const {userid} = req.cookies
     if(!userid){
         return res.json({code:1})
