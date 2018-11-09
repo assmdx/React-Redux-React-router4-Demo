@@ -10,6 +10,7 @@ Router.get('/list',(req,res)=>{
         return res.json({code:0,data:doc})
     })
 })
+//Chat.remove({},function(a,b){})
 Router.post('/register',function(req,res){
     const {user,pwd,type} = req.body
     User.findOne({user:user},(err,doc)=>{
@@ -78,14 +79,27 @@ Router.get('/info',(req,res)=>{
 })
 Router.get('/getmsglist',(req,res)=>{
     const user = req.cookies.userid
+
     //Chat.find({'$or':[{from:user,to:user}]})//查询多个条件
-    Chat.find({},(err,doc)=>{
-        if(!err){
-            return res.json({code:0,msgs:doc})
-        }
-        else{
-            return res.json({code:1,msgs:''})
-        }
+
+    User.find({},(e,userdoc)=>{
+
+        let users = {}
+
+        userdoc.forEach(v=>{
+            users[v._id] = {name:v.user,avatar:v.avatar}
+        })
+
+        Chat.find({'$or':[{from:user},{to:user}]},(err,doc)=>{
+            if(!err){
+                console.log(doc)
+                return res.json({code:0,msgs:doc,users:users})
+            }
+            else{
+                return res.json({code:1,msgs:''})
+            }
+        })
     })
+
 })
 module.exports = Router

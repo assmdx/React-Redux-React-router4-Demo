@@ -1,5 +1,5 @@
 import React from  'react'
-import {List,InputItem,NavBar} from 'antd-mobile'
+import {List,InputItem,NavBar,Icon} from 'antd-mobile'
 
 import {connect} from 'react-redux'
 import {getMsgList,sendMsg,recvMsg} from "../../redux/chat.redux";
@@ -16,17 +16,12 @@ class Chat extends React.Component {
         this.handleSubmit=this.handleSubmit.bind(this)
     }
     componentDidMount(){
-        this.props.getMsgList()
-        this.props.recvMsg()
-        // socket.on('recvmsg',(data)=>{
-        //     this.setState({
-        //         msg:[...this.state.msg,data.text]
-        //     })
-        // })
+        if(this.props.chat.chatmsg.length===0){
+            this.props.getMsgList()
+            this.props.recvMsg()
+        }
     }
     handleSubmit(){
-        //socket.emit('sendmsg',{text:this.state.text})
-
         const from = this.props.user._id
         const to = this.props.match.params.user
         const msg = this.state.text
@@ -34,27 +29,37 @@ class Chat extends React.Component {
         this.setState({text:''})
     }
     render(){
-        console.log(this.props)
-        const user = this.props.match.params.user
+        const userid = this.props.match.params.user
         const Item = List.Item
+        const users = this.props.chat.users
+
+        if(!users[userid]){
+            return null
+        }
         return(
             <div id='chat-page'>
                 <NavBar
+                    icon={<Icon type="left"/>}
+                    onLeftClick={()=>{
+                        this.props.history.goBack()
+                    }}
                     mode='dark'
                 >
-                    {this.props.match.params.user}
+                    {users[userid].name}
                 </NavBar>
                 {
                     this.props.chat.chatmsg.map(v=>{
-                        return v.from === user ? (
+                        const avatar = require(`../img/${users[v.from].avatar}.png`)
+                        return v.from === userid ? (
                             <List key={v._id}>
                                 <Item
+                                    thumb={avatar}
                                 >{v.content}</Item>
                             </List>
                         ) :(
                             <List key={v._id}>
                                 <Item
-                                    extra={'avatar'}
+                                    extra={<img src={avatar}/>}
                                     className='chat-me'
                                 >{v.content}</Item>
                             </List>
@@ -68,9 +73,7 @@ class Chat extends React.Component {
                             value={this.state.text}
                             onChange={v=>{this.setState({text:v})}}
                             extra={<span onClick={()=>this.handleSubmit()}>发送</span>}
-                        >
-                            信息
-                        </InputItem>
+                        />
                     </List>
                 </div>
             </div>
