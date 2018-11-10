@@ -15,6 +15,5 @@ export function getChatId(userId,targetId) {
 }
 
 export function getEmojiUrl(text){
-    console.log(text.match(/<img src="(\S*)"/)[1])
     return text.match(/<img src="(\S*)"/)[1]
 }

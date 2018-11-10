@@ -117,7 +117,7 @@ class Chat extends React.Component {
                                     isCarousel={true}
                                     onClick={el=>{
                                         this.setState({
-                                            text:this.state.text + qqWechatEmotionParser(el.icon)
+                                            text:this.state.text + el.icon
                                         })
                                     }}
                                 />
