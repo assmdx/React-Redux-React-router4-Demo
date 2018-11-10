@@ -103,4 +103,20 @@ Router.get('/getmsglist',(req,res)=>{
     })
 
 })
+
+Router.post('/readmsg',(req,res)=> {
+    const userid = req.cookies.userid
+    const {from} = req.body
+    Chat.update(
+        {from,to:userid},
+        {'$set':{read:true}},
+        {'multi':true},
+        (err,doc)=>{
+        if(!err){
+            console.log(doc)
+            return res.json({code:0,num:doc.nModified})
+        }
+        return res.json({code:1,msg:'修改失败'})
+    })
+})
 module.exports = Router

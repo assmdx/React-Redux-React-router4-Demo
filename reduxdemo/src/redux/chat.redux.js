@@ -22,7 +22,10 @@ export function chat(state=initState,action) {
         case MSG_RECV:
             const n = action.payload.to === action.userid ? 1 :0
             return {...state,chatmsg:[...state.chatmsg,action.payload],unread:state.unread+n}
-        // case MSG_LIST:
+        case MSG_READ:
+            const {from,num} = action.payload
+            return {...state,chatmsg:state.chatmsg.map(v=>({...v,read:v.from === from ? true : v.read})),unread:state.unread-num}
+
         default:
             return initState
     }
@@ -60,5 +63,20 @@ export function recvMsg() {
             const userid=getState().user._id
             dispatch(msgRecv(data,userid))
         })
+    }
+}
+
+function msgRead(from,userid,num) {
+    return {type:MSG_READ,payload:{from,userid,num}}
+}
+export function readMsg(from) {
+    return (dispatch,getState)=>{
+        axios.post('/user/readmsg',{from})
+            .then(res=>{
+                const userid = getState().user._id
+                if(res.data.code===0){
+                    dispatch(msgRead(from,userid,res.data.num))
+                }
+            })
     }
 }
