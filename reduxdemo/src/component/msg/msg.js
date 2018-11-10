@@ -1,13 +1,20 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {List} from 'antd-mobile'
+import {List,Badge} from 'antd-mobile'
+import {getMsgList} from "../../redux/chat.redux";
 
 @connect(
-    state=>state
+    state=>state,
+    {getMsgList}
 )
 class Msg extends React.Component {
     getLast(arr){
         return arr[arr.length - 1 ]
+    }
+    componentDidMount(){
+        if(this.props.chat.chatmsg.length === 0){
+            this.props.getMsgList()
+        }
     }
     render(){
         const userid = this.props.user._id
@@ -19,7 +26,6 @@ class Msg extends React.Component {
             msgGroup[v.chatid].push(v)
         })
         const chatList = Object.values(msgGroup)
-        console.log(chatList)
         const Item = List.Item
         const Brief = Item.Brief
         return (
@@ -30,12 +36,14 @@ class Msg extends React.Component {
                         const targetId = v[0].from === userid ? v[0].to :v[0].from
                         const name = userinfo[targetId] ? userinfo[targetId].name : ""
                         const avatar = userinfo[targetId] ? userinfo[targetId].avatar : ""
+                        const unreadNumn = v.filter(vv=> !vv.read && vv.to === userid).length
                         return (
                             <List
                                 key={lastItem._id}
                             >
                                 <Item
                                     thumb={require(`../img/${avatar}.png`)}
+                                    extra={<Badge text={unreadNumn}></Badge>}
                                 >
                                     {lastItem.content}
                                     <Brief>{name}</Brief>

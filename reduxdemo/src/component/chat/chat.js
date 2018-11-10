@@ -20,8 +20,6 @@ class Chat extends React.Component {
     }
     componentDidMount(){
         if(this.props.chat.chatmsg.length === 0){
-            console.log(this.props.chat)
-            console.log('chat发消息了')
             this.props.getMsgList()
             //this.props.recvMsg()
 
