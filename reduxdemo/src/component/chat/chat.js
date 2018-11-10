@@ -1,10 +1,12 @@
 import React from  'react'
-import {List,InputItem,NavBar,Icon} from 'antd-mobile'
+import {List,InputItem,NavBar,Icon,Grid} from 'antd-mobile'
 
 import {connect} from 'react-redux'
 import {getMsgList,sendMsg,recvMsg} from "../../redux/chat.redux";
 import io from 'socket.io-client'
-import {getChatId} from "../../redux/utils";
+import {getChatId,getEmojiUrl} from "../../redux/utils";
+import qqWechatEmotionParser from 'qq-wechat-emotion-parser';
+
 const socket = io("ws://localhost:9093");
 @connect(
     state=>state,
@@ -13,7 +15,7 @@ const socket = io("ws://localhost:9093");
 class Chat extends React.Component {
     constructor(props){
         super(props)
-        this.state = {text:'',msg:[]}
+        this.state = {text:'',msg:[],shwoEmoji:false}
         this.handleSubmit=this.handleSubmit.bind(this)
     }
     componentDidMount(){
@@ -22,16 +24,27 @@ class Chat extends React.Component {
             console.log('chat发消息了')
             this.props.getMsgList()
             //this.props.recvMsg()
+
         }
+    }
+    fixCarousel(){
+        setTimeout(function(){
+            window.dispatchEvent(new Event('resize'))
+        })
     }
     handleSubmit(){
         const from = this.props.user._id
         const to = this.props.match.params.user
         const msg = this.state.text
         this.props.sendMsg({from,to,msg})
-        this.setState({text:''})
+        this.setState({text:'',showEmoji:false})
     }
     render(){
+        const emoji = "/::) /::~ /::B /::| /:8-) /::< /::$ /::X /::Z /::'( /::-| /::@ /::P /::D /::O /::( /::+ /:--b /::Q /::T /:,@P /:,@-D /::d /:,@o /::g /:|-) /::! /::L /::> /::,@"
+            .split(' ')
+            .filter(v=>v)
+            .map(v=>({icon:getEmojiUrl(qqWechatEmotionParser(v))}))
+
         const userid = this.props.match.params.user
         const Item = List.Item
         const users = this.props.chat.users
@@ -81,8 +94,35 @@ class Chat extends React.Component {
                             placeholder ='请输入'
                             value={this.state.text}
                             onChange={v=>{this.setState({text:v})}}
-                            extra={<span onClick={()=>this.handleSubmit()}>发送</span>}
+                            extra={
+                                <div>
+                                    <span
+                                        style={{marginRight:12}}
+                                        onClick={()=>{
+                                                        this.setState({showEmoji:true})
+                                                        this.fixCarousel()
+                                                    }
+                                                }
+                                    ><img src={getEmojiUrl(qqWechatEmotionParser("/::)"))}/></span>
+                                    <span onClick={()=>this.handleSubmit()}>发送</span>
+                                </div>
+                            }
                         />
+                        {
+                            this.state.showEmoji
+                                ?<Grid
+                                    data={emoji}
+                                    columnNum = {9}
+                                    carouselMaxRow={3}
+                                    isCarousel={true}
+                                    onClick={el=>{
+                                        this.setState({
+                                            text:this.state.text + qqWechatEmotionParser(el.icon)
+                                        })
+                                    }}
+                                />
+                                :null
+                        }
                     </List>
                 </div>
             </div>

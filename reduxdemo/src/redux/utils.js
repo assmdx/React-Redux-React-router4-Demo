@@ -13,3 +13,8 @@ export function getRedirectPath({type,avatar}){
 export function getChatId(userId,targetId) {
     return [userId,targetId].sort().join('_')
 }
+
+export function getEmojiUrl(text){
+    console.log(text.match(/<img src="(\S*)"/)[1])
+    return text.match(/<img src="(\S*)"/)[1]
+}
