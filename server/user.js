@@ -73,6 +73,7 @@ Router.get('/info',(req,res)=>{
             return res.json('后端出错了')
         }
         else{
+            console.log('info is',doc)
             return res.json({code:0,msg:doc})
         }
     })

@@ -17,7 +17,11 @@ class AuthRoute extends React.Component{
         if(publicList.indexOf(pathname) > -1){
             return null
         }
-        axios.get('user/info', {withCredentials: true,headers:{"Cookie":document.cookie}})
+        let url = 'user/info'
+        if(pathname.indexOf('chat') > -1) {
+            url = '../' + url
+        }
+        axios.get(url, {withCredentials: true,headers:{"Cookie":document.cookie}})
             .then(res=>{
                 if(res.status === 200){
                     if(res.data.code === 0){
